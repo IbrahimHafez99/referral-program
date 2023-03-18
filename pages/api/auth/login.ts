@@ -44,7 +44,7 @@ export default async function handler(
           .status(401)
           .json({ errorMessage: "Email or password is invalid" });
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const token = await new jose.SignJWT({ email })
+      const token = await new jose.SignJWT({ jti: email })
         .setProtectedHeader({
           alg: "HS256",
         })
