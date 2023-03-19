@@ -1,29 +1,25 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
 import type { NextPageWithLayout } from "../_app";
 import Input from "@/src/components/Input";
 import Alert from "@/src/components/Alert";
-import type { AlertProps } from "@/src/types/User";
-import { useRouter } from "next/router";
-import { LoginAPI } from "../../src/apis/loginAPI";
-type LoginFormData = {
-  email: string;
-  password: string;
-};
-
+import type { LoginFormData } from "@/src/types/UserLoginForm";
+import { usePopupsContext } from "@/src/context/PopupsContext";
+import { useAuth } from "../../src/hooks/useAuth";
+import NoLayout from "@/src/components/NoLayout";
+import { useAuthContext } from "@/src/context/AuthContext";
+import Loader from "@/src/components/Loader";
 const reset = { email: "", password: "" };
 
 const Login: NextPageWithLayout = () => {
-  const router = useRouter();
-  const [isAlertActive, setIsAlertActive] = useState(false);
-  const [alert, setAlert] = useState<AlertProps>({
-    message: "",
-    type: "",
-  });
+  const login = useAuth();
+  const { isAlertActive, alert } = usePopupsContext();
+  const { authState } = useAuthContext();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
-
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -31,26 +27,16 @@ const Login: NextPageWithLayout = () => {
       [name]: value,
     }));
   };
-
+  useEffect(() => {
+    if (formData.email && formData.password) setIsDisabled(false);
+    if (!formData.email || !formData.password) setIsDisabled(true);
+    console.log("alert active: ", isAlertActive);
+  }, [formData, isAlertActive]);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsAlertActive(true);
     try {
-      const response = await LoginAPI.login({
-        email: formData.email,
-        password: formData.password,
-      });
-      setIsAlertActive(true);
-      console.log(response.data);
-      setAlert({ message: "Loggedin Successfully", type: "success" });
-      setTimeout(() => {
-        router.push("/home");
-      }, 1000);
-    } catch (error: any) {
-      setAlert({
-        message: error.response.data.message as string,
-        type: "error",
-      });
+      await login(formData);
+    } catch (error: unknown) {
       console.error(error);
     }
     setFormData(reset);
@@ -80,8 +66,14 @@ const Login: NextPageWithLayout = () => {
             name="password"
             value={formData.password}
           />
-          <button type="submit" className="btn btn-primary mx-auto">
-            Login
+          <button
+            type="submit"
+            className={`btn btn-primary mx-auto ${
+              isDisabled && "disabled:bg-[#BB8FCE ]"
+            }`}
+            disabled={isDisabled}
+          >
+            {authState.loading ? <Loader /> : "Login"}
           </button>
         </form>
       </div>
@@ -101,5 +93,19 @@ const Login: NextPageWithLayout = () => {
 export default Login;
 
 Login.getLayout = function getLayout(page: ReactElement) {
-  return <>{page}</>;
+  return <NoLayout>{page}</NoLayout>;
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const isAuthenticated = ctx?.req?.headers.cookie?.split("=")[1] as string;
+  if (isAuthenticated) {
+    console.log("im in");
+    return {
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
+    };
+  }
+  return {};
 };

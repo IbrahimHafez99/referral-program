@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 interface UserJwtPayload {
@@ -11,9 +10,8 @@ export class AuthError extends Error {}
 /**
  * Verifies the user's JWT token and returns its payload if it's valid.
  */
-export async function verifyAuth(req: NextRequest) {
+export async function verifyAuth(token: string) {
   const getJwtSecretKey = process.env.JWT_SECRET;
-  const token = req.headers.get("authorization")?.split(" ")[1] as string;
 
   if (!token) throw new AuthError("Missing user token");
 

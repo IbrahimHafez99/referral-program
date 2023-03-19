@@ -1,13 +1,15 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import type { NextPageWithLayout } from "../_app";
 import PhoneInput from "react-phone-number-input";
 
 import Input from "@/src/components/Input";
 import { RegisterAPI } from "@/src/apis/registerAPI";
 import Alert from "@/src/components/Alert";
-import { usePopupsContext } from "@/src/context/PopupsContext";
-import type { AlertProps } from "@/src/types/User";
 import { useRouter } from "next/router";
+import { useAuthContext } from "@/src/context/AuthContext";
+import Loader from "@/src/components/Loader";
+import NoLayout from "@/src/components/NoLayout";
+import { usePopupsContext } from "@/src/context/PopupsContext";
 type RegistrationFormData = {
   fullName: string;
   email: string;
@@ -17,19 +19,24 @@ type RegistrationFormData = {
 const reset = { fullName: "", email: "", password: "" };
 
 const Registration: NextPageWithLayout = () => {
+  const { authState, setAuthState } = useAuthContext();
+  const { isAlertActive, setIsAlertActive, alert, setAlert } =
+    usePopupsContext();
+
   const router = useRouter();
-  const [isAlertActive, setIsAlertActive] = useState(false);
   const [value, setValue] = useState<any>();
-  const [alert, setAlert] = useState<AlertProps>({
-    message: "",
-    type: "",
-  });
   const [formData, setFormData] = useState<RegistrationFormData>({
     fullName: "",
     email: "",
     password: "",
   });
-
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  useEffect(() => {
+    if (formData.email && formData.fullName && formData.password && value)
+      setIsDisabled(false);
+    if (!formData.email || !formData.fullName || !formData.password || !value)
+      setIsDisabled(true);
+  }, [formData, value]);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -40,8 +47,8 @@ const Registration: NextPageWithLayout = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log({ ...formData, value });
-    setIsAlertActive(true);
+    setAuthState((prevAuthState) => ({ ...prevAuthState, loading: true }));
+    setIsDisabled(true);
     try {
       const response = await RegisterAPI.register({
         name: formData.fullName,
@@ -53,6 +60,7 @@ const Registration: NextPageWithLayout = () => {
       console.log(response.data);
       setAlert({ message: "Registered Successfully", type: "success" });
       setTimeout(() => {
+        setIsAlertActive(false);
         router.push("/login");
       }, 1000);
     } catch (error: any) {
@@ -60,13 +68,13 @@ const Registration: NextPageWithLayout = () => {
         message: error.response.data.message as string,
         type: "error",
       });
+      setIsAlertActive(true);
       console.error(error);
     }
-
+    setAuthState((prevAuthState) => ({ ...prevAuthState, loading: false }));
     setValue("");
     setFormData(reset);
   };
-
   return (
     <main className="min-h-screen bg-primary flex flex-col justify-center items-center relative">
       <div className="container">
@@ -117,8 +125,14 @@ const Registration: NextPageWithLayout = () => {
               onChange={setValue}
             />
           </div>
-          <button type="submit" className="btn btn-primary mx-auto">
-            Register
+          <button
+            type="submit"
+            className={`btn btn-primary mx-auto ${
+              isDisabled && "disabled:bg-[#BB8FCE ]"
+            }`}
+            disabled={isDisabled}
+          >
+            {authState.loading ? <Loader /> : "Register"}
           </button>
         </form>
       </div>
@@ -138,5 +152,5 @@ const Registration: NextPageWithLayout = () => {
 export default Registration;
 
 Registration.getLayout = function getLayout(page: ReactElement) {
-  return <>{page}</>;
+  return <NoLayout>{page}</NoLayout>;
 };

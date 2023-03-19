@@ -10,23 +10,20 @@ export const config = {
 };
 
 export async function middleware(req: NextRequest, res: NextResponse) {
-  // validate the user is authenticated
-  const verifiedToken = (await verifyAuth(req).catch((err) => {
+  // const token = req.headers.get("authorization")?.split(" ")[1] as string;
+  console.log(req.geo);
+  const token = req.cookies.get("jwt")?.value as string;
+  const verifiedToken = (await verifyAuth(token).catch((err) => {
     console.error(err.message);
   })) as UserJwtPayload;
 
   if (!verifiedToken) {
     return NextResponse.redirect("http://localhost:3000/login");
-    // return new NextResponse(
-    //   JSON.stringify({ error: { message: "authentication required" } }),
-    //   { status: 401 }
-    // );
   }
   const email: string = Object.values(verifiedToken)[0];
   const response = await AuthAPI.auth(email);
   if (response.status === 404) {
     return NextResponse.redirect("http://localhost:3000/login");
   }
-  // req.user = user as { name: string; phoneNumber: string; email: string };
   return NextResponse.next();
 }

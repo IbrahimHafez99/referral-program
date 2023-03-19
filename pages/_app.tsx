@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import Layout from "@/src/components/Layout";
 import { PopupsProdvider } from "@/src/context/PopupsContext";
+import { AuthProvider } from "@/src/context/AuthContext";
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -16,10 +17,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   if (Component.getLayout)
     return Component.getLayout(<Component {...pageProps} />);
   return (
-    <PopupsProdvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </PopupsProdvider>
+    <AuthProvider>
+      <PopupsProdvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </PopupsProdvider>
+    </AuthProvider>
   );
 }

@@ -62,7 +62,7 @@ export default async function handler(
         .sign(secret);
       res.status(201).json({
         message: "Created",
-        data: token,
+        // data: token,
       });
     }
   } catch (error: any) {
