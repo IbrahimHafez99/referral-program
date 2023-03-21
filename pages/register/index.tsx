@@ -57,7 +57,6 @@ const Registration: NextPageWithLayout = () => {
         phoneNumber: value,
       });
       setIsAlertActive(true);
-      console.log(response.data);
       setAlert({ message: "Registered Successfully", type: "success" });
       setTimeout(() => {
         setIsAlertActive(false);

@@ -12,7 +12,7 @@ import Loader from "@/src/components/Loader";
 const reset = { email: "", password: "" };
 
 const Login: NextPageWithLayout = () => {
-  const login = useAuth();
+  const {login} = useAuth();
   const { isAlertActive, alert } = usePopupsContext();
   const { authState } = useAuthContext();
   const [formData, setFormData] = useState<LoginFormData>({
@@ -30,7 +30,6 @@ const Login: NextPageWithLayout = () => {
   useEffect(() => {
     if (formData.email && formData.password) setIsDisabled(false);
     if (!formData.email || !formData.password) setIsDisabled(true);
-    console.log("alert active: ", isAlertActive);
   }, [formData, isAlertActive]);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,16 +95,15 @@ Login.getLayout = function getLayout(page: ReactElement) {
   return <NoLayout>{page}</NoLayout>;
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const isAuthenticated = ctx?.req?.headers.cookie?.split("=")[1] as string;
-  if (isAuthenticated) {
-    console.log("im in");
-    return {
-      redirect: {
-        destination: "/home",
-        permanent: false,
-      },
-    };
-  }
-  return {};
-};
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const isAuthenticated = ctx?.req?.headers.cookie?.split("=")[1] as string;
+//   if (isAuthenticated) {
+//     return {
+//       redirect: {
+//         destination: "/home",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return { props: {} };
+// };

@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import parsePhoneNumber from "libphonenumber-js";
 import * as jose from "jose";
+import { v4 as uuidv4 } from "uuid";
+
 const prisma = new PrismaClient();
 
 interface User {
@@ -51,19 +53,20 @@ export default async function handler(
       const hash: string = await bcrypt.hash(client.password, salt);
 
       const user = await prisma.user.create({
-        data: { ...client, password: hash },
+        data: {
+          ...client,
+          password: hash,
+          links: {
+            create: {
+              referral: uuidv4().substring(0, 8),
+            },
+          },
+        },
+        include: {
+          links: true,
+        },
       });
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const token = await new jose.SignJWT({ jti: email })
-        .setProtectedHeader({
-          alg: "HS256",
-        })
-        .setExpirationTime("24h")
-        .sign(secret);
-      res.status(201).json({
-        message: "Created",
-        // data: token,
-      });
+      res.status(201).json({ message: "Created!" });
     }
   } catch (error: any) {
     console.log(error);

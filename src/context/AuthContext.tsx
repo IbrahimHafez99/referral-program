@@ -3,10 +3,7 @@ import React, {
   ReactElement,
   useContext,
   useState,
-  useEffect,
 } from "react";
-import { api } from "../apis/configs/axiosConfigs";
-import { getCookie } from "cookies-next";
 type ChildrenType = {
   children?: ReactElement | ReactElement[] | undefined;
 };
@@ -33,10 +30,7 @@ export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
     data: "",
     error: "",
   });
-  useEffect(() => {
-    const jwt = getCookie("jwt") ? getCookie("jwt") : "";
-    // api.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-  }, []);
+
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>
       {children}

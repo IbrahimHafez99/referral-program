@@ -3,8 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import { setCookies } from "cookies-next";
-
+import cookie from "cookie";
 const prisma = new PrismaClient();
 
 export default async function handler(
@@ -47,13 +46,13 @@ export default async function handler(
           .status(401)
           .json({ errorMessage: "Email or password is invalid" });
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const token = await new jose.SignJWT({ jti: email })
+      const token = await new jose.SignJWT({ email })
         .setProtectedHeader({
           alg: "HS256",
         })
         .setExpirationTime("24h")
         .sign(secret);
-      setCookies("jwt", token, { req, res, maxAge: 60 * 1 * 24 });
+      // res.setHeader("Set-Cookie", cookie.serialize("jwt", token));
       return res.status(200).json({ message: "Logged in successfully", token });
     }
     return res.status(404).json({ message: " Unknown endpoint" });
