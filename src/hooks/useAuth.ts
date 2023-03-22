@@ -26,7 +26,7 @@ export const useAuth = () => {
       setAlert({ message: "Loggedin Successfully", type: "success" });
       setTimeout(() => {
         setIsAlertActive(false);
-        router.push("/home");
+        router.push("/dashboard");
       }, 1000);
     } catch (error: any) {
       setAlert({

@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
 import type { NextPageWithLayout } from "../_app";
 import Input from "@/src/components/Input";
 import Alert from "@/src/components/Alert";
@@ -9,10 +8,11 @@ import { useAuth } from "../../src/hooks/useAuth";
 import NoLayout from "@/src/components/NoLayout";
 import { useAuthContext } from "@/src/context/AuthContext";
 import Loader from "@/src/components/Loader";
+import Link from "next/link";
 const reset = { email: "", password: "" };
 
 const Login: NextPageWithLayout = () => {
-  const {login} = useAuth();
+  const { login } = useAuth();
   const { isAlertActive, alert } = usePopupsContext();
   const { authState } = useAuthContext();
   const [formData, setFormData] = useState<LoginFormData>({
@@ -68,12 +68,15 @@ const Login: NextPageWithLayout = () => {
           <button
             type="submit"
             className={`btn btn-primary mx-auto ${
-              isDisabled && "disabled:bg-[#BB8FCE ]"
+              isDisabled && "disabled:bg-[#a2d7f7] disabled:text-white"
             }`}
             disabled={isDisabled}
           >
             {authState.loading ? <Loader /> : "Login"}
           </button>
+          <Link href="/register" className="mt-4 text-sm text-white">
+            Don&apos;t have an account?
+          </Link>
         </form>
       </div>
       {isAlertActive ? (
@@ -100,7 +103,7 @@ Login.getLayout = function getLayout(page: ReactElement) {
 //   if (isAuthenticated) {
 //     return {
 //       redirect: {
-//         destination: "/home",
+//         destination: "/dashboard",
 //         permanent: false,
 //       },
 //     };

@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import type { NextPageWithLayout } from "../_app";
 import PhoneInput from "react-phone-number-input";
-
+import Link from "next/link";
 import Input from "@/src/components/Input";
 import { RegisterAPI } from "@/src/apis/registerAPI";
 import Alert from "@/src/components/Alert";
@@ -127,12 +127,15 @@ const Registration: NextPageWithLayout = () => {
           <button
             type="submit"
             className={`btn btn-primary mx-auto ${
-              isDisabled && "disabled:bg-[#BB8FCE ]"
+              isDisabled && "disabled:bg-[#a2d7f7] disabled:text-white"
             }`}
             disabled={isDisabled}
           >
             {authState.loading ? <Loader /> : "Register"}
           </button>
+          <Link href="/login" className="mt-4 text-sm text-white">
+            Already have an account?
+          </Link>
         </form>
       </div>
       {isAlertActive ? (
