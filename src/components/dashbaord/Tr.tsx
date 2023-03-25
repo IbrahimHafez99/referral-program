@@ -26,7 +26,7 @@ const Tr = ({ index, referral }: TrProps) => {
       <td>
         <button
           className={`btn btn-accent mr-2 ${
-            isCopied.link && "disabled:bg-[#fff670]"
+            isCopied.link && "disabled:bg-[#709aa7] disabled:text-white"
           }`}
           disabled={isCopied.link}
           onClick={() =>
@@ -37,7 +37,7 @@ const Tr = ({ index, referral }: TrProps) => {
         </button>
         <button
           className={`btn btn-accent ${
-            isCopied.coupon && "disabled:bg-[#fff670]"
+            isCopied.coupon && "disabled:bg-[#709aa7] disabled:text-white"
           }`}
           disabled={isCopied.coupon}
           onClick={() => copyToClipboard(referral)}
