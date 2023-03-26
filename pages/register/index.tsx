@@ -116,7 +116,9 @@ const Registration: NextPageWithLayout = () => {
             value={formData.phoneNumber}
           /> */}
           <div className="form-control w-[45%] max-w-xs ">
-            <label className="phone-label label-text">Phone number</label>
+            <label className="phone-label label-text text-white">
+              Phone number
+            </label>
             <PhoneInput
               defaultCountry="OM"
               placeholder="Phone number"
@@ -126,8 +128,8 @@ const Registration: NextPageWithLayout = () => {
           </div>
           <button
             type="submit"
-            className={`btn btn-primary mx-auto ${
-              isDisabled && "disabled:bg-[#a2d7f7] disabled:text-white"
+            className={`btn bg-[#3795BD] hover:bg-[#2c7797] mx-auto ${
+              isDisabled && "disabled:bg-[#a2d7f7] border-none"
             }`}
             disabled={isDisabled}
           >

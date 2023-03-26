@@ -10,7 +10,7 @@ module.exports = {
   ],
   theme: {},
   daisyui: {
-    themes: ["coffee"],
+    themes: ["light"],
   },
   plugins: [require("daisyui"), require("tw-elements/dist/plugin")],
 };

@@ -21,7 +21,7 @@ const Input = ({
   return (
     <div className="form-control w-[45%] max-w-xs">
       <label className="label">
-        <span className="label-text">{label}</span>
+        <span className="label-text text-white">{label}</span>
       </label>
       <input
         name={name}

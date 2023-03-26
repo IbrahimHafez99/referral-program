@@ -42,7 +42,7 @@ const Login: NextPageWithLayout = () => {
   };
 
   return (
-    <main className="min-h-screen bg-primary flex flex-col justify-center items-center relative">
+    <main className="min-h-screen bg-primary flex flex-col justify-center items-center relative ">
       <div className="container">
         {" "}
         <form
@@ -67,8 +67,8 @@ const Login: NextPageWithLayout = () => {
           />
           <button
             type="submit"
-            className={`btn btn-primary mx-auto ${
-              isDisabled && "disabled:bg-[#a2d7f7] disabled:text-white"
+            className={`btn bg-[#3795BD] hover:bg-[#2c7797] mx-auto ${
+              isDisabled && "disabled:bg-[#a2d7f7] border-none"
             }`}
             disabled={isDisabled}
           >
