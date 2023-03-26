@@ -6,6 +6,7 @@ import { useCookies } from "react-cookie";
 import { usePopupsContext } from "@/src/context/PopupsContext";
 import Alert from "@/src/components/Alert";
 import Tr from "@/src/components/dashbaord/Tr";
+import Modal from "@/src/components/Modal";
 type Link = {
   referral: string;
 };
@@ -16,14 +17,13 @@ type DashboardProps = {
 const Dashboard = (props: DashboardProps) => {
   const { isAlertActive, setIsAlertActive, alert, setAlert } =
     usePopupsContext();
-
-  const [error, setError] = useState("");
+  const [couponCode, setCouponCode] = useState<string>("");
   const [cookie] = useCookies(["jwt"]);
   const [links, setLinks] = useState<Link[]>(props.links);
   let timeoutID: NodeJS.Timeout;
+
   const handleCreateNewLink = async () => {
     const response = await LinkAPI.create(cookie.jwt);
-    console.log(console.log(response));
     if (response.status === 201) {
       setLinks((prev) => [...prev, { referral: response.data.referral }]);
       clearTimeout(timeoutID);
@@ -49,44 +49,99 @@ const Dashboard = (props: DashboardProps) => {
       }, 4000);
     }
   };
+
+  const handleSubmitCustomLink = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const response = await LinkAPI.create(cookie.jwt);
+    if (response.status === 201) {
+      setLinks((prev) => [...prev, { referral: response.data.referral }]);
+      clearTimeout(timeoutID);
+      setAlert({
+        type: "success",
+        message: response.message,
+        styles: "fixed w-[273px] bottom-2 right-2 transition transition-all",
+      });
+      setIsAlertActive(true);
+      timeoutID = setTimeout(() => {
+        setIsAlertActive(false);
+      }, 4000);
+    } else {
+      clearTimeout(timeoutID);
+      setAlert({
+        type: "error",
+        message: response.message,
+        styles: "fixed w-[273px] bottom-2 right-2 transition transition-all",
+      });
+      setIsAlertActive(true);
+      timeoutID = setTimeout(() => {
+        setIsAlertActive(false);
+      }, 4000);
+    }
+    const modal = document.getElementById("my-modal-4");
+    if (modal && modal.classList.contains("modal-open")) {
+      modal.classList.remove("modal-open");
+    }
+  };
   return (
-    <main>
-      <div className="container">
-        <div className="overflow-x-auto  flex justify-center flex-wrap">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Link</th>
-                <th>Copy</th>
-                <th>Code</th>
-              </tr>
-            </thead>
-            <tbody>
-              {links.map((link, index) => (
-                <Tr key={index} index={index} referral={link.referral} />
-              ))}
-            </tbody>
-          </table>
-          <div className="flex flex-col justify-center items-center">
-            <button
-              onClick={handleCreateNewLink}
-              className="btn btn-active btn-primary w-full self-start mt-5"
-            >
+    <React.Fragment>
+      <main>
+        <div className="container">
+          <div className="overflow-x-auto  flex justify-center flex-wrap">
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Link</th>
+                  <th>Copy</th>
+                  <th>Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                {links.map((link, index) => (
+                  <Tr key={index} index={index} referral={link.referral} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center space-x-4 items-center mt-4">
+            <button onClick={handleCreateNewLink} className="btn  btn-primary">
               Create a new link
             </button>
-            <div>{error}</div>
+            <label htmlFor="my-modal-4" className="btn btn-primary">
+              open modal
+            </label>
           </div>
         </div>
-      </div>
-      {isAlertActive ? (
-        <Alert
-          type={alert?.type}
-          message={alert?.message}
-          styles={`${!isAlertActive && "none"} ${alert.styles}`}
-        />
-      ) : null}
-    </main>
+        {isAlertActive ? (
+          <Alert
+            type={alert?.type}
+            message={alert?.message}
+            styles={`${!isAlertActive && "none"} ${alert.styles}`}
+          />
+        ) : null}
+      </main>
+      <Modal styles="w-[40%]">
+        <div className="flex flex-col">
+          <h3 className="font-bold text-lg">Create a custom link</h3>
+          <form onSubmit={handleSubmitCustomLink}>
+            <input
+              type="text"
+              placeholder="QR_ME"
+              className="input input-bordered input-md w-full mt-4"
+              value={couponCode}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setCouponCode(event.target.value);
+              }}
+            />
+            <button type="submit" className="btn btn-ghost self-center mt-4">
+              Create
+            </button>
+          </form>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 };
 

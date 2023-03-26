@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { api } from "./configs/fetchConfig";
 export const LinkAPI = {
   get: async function (token: string) {
@@ -12,8 +11,8 @@ export const LinkAPI = {
     });
     return await response.json();
   },
-  create: async function (token: string) {
-    const response = await api("/api/link/create", token, "POST");
+  create: async function (token: string, link?: string) {
+    const response = await api("/api/link/create", token, "POST", { link });
     return response;
   },
 };

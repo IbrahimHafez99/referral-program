@@ -6,17 +6,19 @@ export const api = async (
 ) => {
   const baseURL = "http://localhost:3000";
   const endpointPath = endPoint;
-
   const url = new URL(endpointPath, baseURL);
-  console.log(url.href);
 
-  const response = await fetch(url.href, {
+  const requestOptions: RequestInit = {
     method: method,
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     // credentials: 'include',
-  });
+  };
+  if (data) {
+    requestOptions.body = JSON.stringify(data);
+  }
+  const response = await fetch(url.href, requestOptions);
   return await response.json();
 };

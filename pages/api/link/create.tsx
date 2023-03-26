@@ -11,6 +11,7 @@ export default async function handler(
   try {
     const payload: any = getPayload(req);
     const email: string = payload.email;
+    const link: string = req.body.link;
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -24,7 +25,7 @@ export default async function handler(
       if (linkCount < 5) {
         const newLink = await prisma.link.create({
           data: {
-            referral: uuidv4().substring(0, 8),
+            referral: link ? link : uuidv4().substring(0, 8),
             User: {
               connect: {
                 id: user.id,
@@ -32,13 +33,11 @@ export default async function handler(
             },
           },
         });
-        return res
-          .status(201)
-          .json({
-            message: "a new referral link successfully created",
-            data: newLink,
-            status: 201,
-          });
+        return res.status(201).json({
+          message: "a new referral link successfully created",
+          data: newLink,
+          status: 201,
+        });
       } else {
         return res.status(401).json({
           message: "You've reached the maximum number of referral links",
