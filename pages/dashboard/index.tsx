@@ -54,7 +54,7 @@ const Dashboard = (props: DashboardProps) => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    const response = await LinkAPI.create(cookie.jwt);
+    const response = await LinkAPI.create(cookie.jwt, couponCode);
     if (response.status === 201) {
       setLinks((prev) => [...prev, { referral: response.data.referral }]);
       clearTimeout(timeoutID);
@@ -83,6 +83,8 @@ const Dashboard = (props: DashboardProps) => {
     if (modal && modal.classList.contains("modal-open")) {
       modal.classList.remove("modal-open");
     }
+    console.log(modal);
+    setCouponCode("");
   };
   return (
     <React.Fragment>
@@ -106,12 +108,22 @@ const Dashboard = (props: DashboardProps) => {
             </table>
           </div>
           <div className="flex justify-center space-x-4 items-center mt-4">
-            <button onClick={handleCreateNewLink} className="btn  btn-primary">
+            <button
+              onClick={handleCreateNewLink}
+              className="btn  btn-primary"
+              disabled={links.length >= 5}
+            >
               Create a new link
             </button>
-            <label htmlFor="my-modal-4" className="btn btn-primary">
-              open modal
-            </label>
+            {links.length >= 5 ? (
+              <button className="btn btn-primary" disabled={true}>
+                Create a custom link
+              </button>
+            ) : (
+              <label htmlFor="my-modal-4" className="btn btn-primary">
+                Create a custom link
+              </label>
+            )}
           </div>
         </div>
         {isAlertActive ? (

@@ -12,6 +12,7 @@ export default async function handler(
     const payload: any = getPayload(req);
     const email: string = payload.email;
     const link: string = req.body.link;
+    console.log(link)
     const user = await prisma.user.findUnique({
       where: {
         email,
