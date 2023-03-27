@@ -22,7 +22,7 @@ const Registration: NextPageWithLayout = () => {
   const { authState, setAuthState } = useAuthContext();
   const { isAlertActive, setIsAlertActive, alert, setAlert } =
     usePopupsContext();
-
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [value, setValue] = useState<any>();
   const [formData, setFormData] = useState<RegistrationFormData>({
@@ -50,28 +50,34 @@ const Registration: NextPageWithLayout = () => {
     setAuthState((prevAuthState) => ({ ...prevAuthState, loading: true }));
     setIsDisabled(true);
     try {
+      setIsLoading(true);
       const response = await RegisterAPI.register({
         name: formData.fullName,
         email: formData.email,
         password: formData.password,
         phoneNumber: value,
       });
-      setIsAlertActive(true);
       setAlert({ message: "Registered Successfully", type: "success" });
+      setIsAlertActive(true);
       setTimeout(() => {
         setIsAlertActive(false);
         router.push("/login");
-      }, 1000);
+      }, 2000);
     } catch (error: any) {
+      console.log();
       setAlert({
         message: error.response.data.message as string,
         type: "error",
       });
       setIsAlertActive(true);
+      setTimeout(() => {
+        setIsAlertActive(false);
+      }, 2000);
       console.error(error);
     }
     setAuthState((prevAuthState) => ({ ...prevAuthState, loading: false }));
     setValue("");
+    setIsLoading(false);
     setFormData(reset);
   };
   return (
@@ -133,7 +139,7 @@ const Registration: NextPageWithLayout = () => {
             }`}
             disabled={isDisabled}
           >
-            {authState.loading ? <Loader /> : "Register"}
+            {isLoading ? <Loader /> : "Register"}
           </button>
           <Link href="/login" className="mt-4 text-sm text-white">
             Already have an account?

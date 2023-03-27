@@ -22,8 +22,8 @@ export const useAuth = () => {
         loading: false,
         data: response.data.token,
       }));
-      setIsAlertActive(true);
       setAlert({ message: "Loggedin Successfully", type: "success" });
+      setIsAlertActive(true);
       setTimeout(() => {
         setIsAlertActive(false);
         router.push("/dashboard");
@@ -33,6 +33,10 @@ export const useAuth = () => {
         message: error.response.data.message as string,
         type: "error",
       });
+      setIsAlertActive(true);
+      setTimeout(() => {
+        setIsAlertActive(false);
+      }, 1000);
       console.error(error);
     }
   }

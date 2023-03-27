@@ -15,6 +15,7 @@ const Login: NextPageWithLayout = () => {
   const { login } = useAuth();
   const { isAlertActive, alert } = usePopupsContext();
   const { authState } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -34,10 +35,13 @@ const Login: NextPageWithLayout = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      setIsLoading(true);
       await login(formData);
     } catch (error: unknown) {
+      
       console.error(error);
     }
+    setIsLoading(true);
     setFormData(reset);
   };
 
@@ -72,7 +76,7 @@ const Login: NextPageWithLayout = () => {
             }`}
             disabled={isDisabled}
           >
-            {authState.loading ? <Loader /> : "Login"}
+            {isLoading ? <Loader /> : "Login"}
           </button>
           <Link href="/register" className="mt-4 text-sm text-white">
             Don&apos;t have an account?
