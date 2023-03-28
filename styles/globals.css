@@ -190,3 +190,7 @@
   opacity: 1;
   color: var(--PhoneInputCountrySelectArrow-color--focus);
 }
+
+.landing-page {
+  min-height: calc(100vh - 64px);
+}

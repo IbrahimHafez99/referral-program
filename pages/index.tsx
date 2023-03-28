@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div
-      className="hero min-h-screen"
+      className="hero landing-page"
       style={{
         backgroundImage: `url("https://images.unsplash.com/photo-1550482781-48d477e61c72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")`,
       }}
