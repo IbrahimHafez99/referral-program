@@ -19,9 +19,9 @@ export default function Home() {
             With our program, you can easily refer your friends, colleagues, or
             anyone who might be interested in using your application
           </p>
-          <button className="btn">
-            <Link href="/register">Get Started</Link>
-          </button>
+          <Link className="btn" href="/register">
+            Get Started
+          </Link>
         </div>
       </div>
     </div>
