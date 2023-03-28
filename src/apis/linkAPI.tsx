@@ -15,4 +15,10 @@ export const LinkAPI = {
     const response = await api("/api/link/create", token, "POST", { link });
     return response;
   },
+  delete: async function (token: string, referral?: string) {
+    const response = await api("/api/link/delete", token, "DELETE", {
+      referral,
+    });
+    return response;
+  },
 };

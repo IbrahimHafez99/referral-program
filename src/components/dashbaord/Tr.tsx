@@ -1,15 +1,29 @@
+import { LinkAPI } from "@/src/apis/linkAPI";
 import useCopyToClipboard from "@/src/hooks/useCopyToClipboard";
 import Link from "next/link";
-import React from "react";
-
+import { Dispatch, SetStateAction } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
+import { useCookies } from "react-cookie";
 type TrProps = {
   referral: string;
   key: number;
   index: number;
+  setLinks: Dispatch<SetStateAction<{ referral: string }[]>>;
 };
 
-const Tr = ({ index, referral }: TrProps) => {
+const Tr = ({ index, referral, setLinks }: TrProps) => {
+  const [cookie] = useCookies(["jwt"]);
   const { isCopied, copyToClipboard } = useCopyToClipboard();
+
+  const handleReferralDelete = async (referral: string) => {
+    try {
+      await LinkAPI.delete(cookie.jwt, referral);
+      setLinks((prev) => prev.filter((link) => link.referral !== referral));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <tr className="hover">
       <th>{index + 1}</th>
@@ -46,6 +60,11 @@ const Tr = ({ index, referral }: TrProps) => {
         </button>
       </td>
       <td>{referral}</td>
+      <td>
+        <button onClick={() => handleReferralDelete(referral)}>
+          <AiOutlineDelete />
+        </button>
+      </td>
     </tr>
   );
 };

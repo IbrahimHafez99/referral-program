@@ -81,11 +81,9 @@ const Dashboard = (props: DashboardProps) => {
         }, 4000);
       }
       const modal = document.getElementById("my-modal-4");
-      console.log(modal);
       if (modal) {
         modal.classList.remove("modal-toggle");
       }
-      console.log(modal);
       setCouponCode("");
     }
   };
@@ -101,11 +99,17 @@ const Dashboard = (props: DashboardProps) => {
                   <th>Link</th>
                   <th>Copy</th>
                   <th>Code</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {links.map((link, index) => (
-                  <Tr key={index} index={index} referral={link.referral} />
+                  <Tr
+                    key={index}
+                    index={index}
+                    referral={link.referral}
+                    setLinks={setLinks}
+                  />
                 ))}
               </tbody>
             </table>
