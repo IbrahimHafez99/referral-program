@@ -17,8 +17,12 @@ const Tr = ({ index, referral, setLinks }: TrProps) => {
 
   const handleReferralDelete = async (referral: string) => {
     try {
-      await LinkAPI.delete(cookie.jwt, referral);
-      setLinks((prev) => prev.filter((link) => link.referral !== referral));
+      const res = await LinkAPI.delete(cookie.jwt, referral);
+      if (res.status === 204) {
+        setLinks((prev) => prev.filter((link) => link.referral !== referral));
+      } else {
+        console.log(res.errorMessage);
+      }
     } catch (error) {
       console.log(error);
     }
