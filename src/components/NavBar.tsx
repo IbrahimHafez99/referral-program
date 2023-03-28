@@ -11,9 +11,11 @@ const NavBar = () => {
     setToken(cookie.jwt);
   }, [cookie.jwt]);
   return (
-    <div className="navbar fixed top-0 bg-base-100">
+    <div className="navbar fixed top-0 bg-primary">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <Link href="/" className="btn btn-ghost normal-case text-xl">
+          QRLIX
+        </Link>
       </div>
       <div className="flex-none gap-2">
         {token ? (

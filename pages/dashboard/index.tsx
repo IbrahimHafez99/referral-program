@@ -89,8 +89,8 @@ const Dashboard = (props: DashboardProps) => {
   };
   return (
     <React.Fragment>
-      <main>
-        <div className="container">
+      <main className="mt-[67px]">
+        <div className="container ">
           <div className="overflow-x-auto  flex justify-center flex-wrap">
             <table className="table w-full">
               <thead>
@@ -114,7 +114,7 @@ const Dashboard = (props: DashboardProps) => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center space-x-4 items-center mt-4">
+          <div className="flex justify-center gap-2 items-center mt-4 flex-wrap">
             <button
               onClick={handleCreateNewLink}
               className="btn  btn-primary"
@@ -141,7 +141,7 @@ const Dashboard = (props: DashboardProps) => {
           />
         ) : null}
       </main>
-      <Modal styles="w-[40%]">
+      <Modal>
         <div className="flex flex-col">
           <h3 className="font-bold text-lg">Create a custom link</h3>
           <form onSubmit={handleSubmitCustomLink}>
