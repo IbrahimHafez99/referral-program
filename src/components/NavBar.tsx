@@ -11,7 +11,7 @@ const NavBar = () => {
     setToken(cookie.jwt);
   }, [cookie.jwt]);
   return (
-    <div className="navbar fixed top-0 bg-primary">
+    <div className="navbar fixed top-0 z-40 bg-primary">
       <div className="flex-1">
         <Link href="/" className="btn btn-ghost normal-case text-xl">
           QRLIX
@@ -31,13 +31,13 @@ const NavBar = () => {
                 className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
               >
                 <li>
-                  <a className="justify-between">
-                    Profile
+                  <Link href="/dashboard" className="justify-between">
+                    Dashboard
                     <span className="badge">New</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a>Settings</a>
+                  <Link href="/settings">Settings</Link>
                 </li>
                 <li onClick={() => logout()}>
                   <a>Logout</a>
