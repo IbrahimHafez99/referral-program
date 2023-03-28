@@ -5,7 +5,8 @@ import validator from "validator";
 import parsePhoneNumber from "libphonenumber-js";
 import * as jose from "jose";
 import { v4 as uuidv4 } from "uuid";
-
+import { transporter } from "@/lib/transporter";
+import { verficationHTML } from "@/public/html/email-page";
 const prisma = new PrismaClient();
 
 interface User {
@@ -43,10 +44,10 @@ export default async function handler(
         phoneNumber: client.phoneNumber,
       },
     });
-
-    if (checkUser) {
+    console.log(checkUser);
+    if (checkUser?.email === email) {
       res.status(409).json({ message: "This email already exists." });
-    } else if (checkPhone) {
+    } else if (checkPhone?.phoneNumber === client.phoneNumber) {
       res.status(409).json({ message: "This phone number already exists." });
     } else {
       const salt = await bcrypt.genSalt(10);
@@ -66,12 +67,32 @@ export default async function handler(
           links: true,
         },
       });
-      res.status(201).json({ message: "Created!" });
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const token = await new jose.SignJWT({ email })
+        .setProtectedHeader({
+          alg: "HS256",
+        })
+        .setExpirationTime("24h")
+        .sign(secret);
+      const message = {
+        from: "qrlix@auth.com",
+        to: "ibrahim.hafez99@hotmail.com",
+        subject: `Your Verfication Link`,
+        html: verficationHTML(token),
+      };
+      transporter.sendMail(message, (err, info) => {
+        if (err) {
+          return res.status(500).json({ data: err });
+        } else {
+          console.log(info);
+          return res.status(201).json({ message: "Email Verification Sent" });
+        }
+      });
     }
   } catch (error: any) {
     console.log(error);
 
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   } finally {
     await prisma.$disconnect();
   }

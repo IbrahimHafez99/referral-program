@@ -20,5 +20,8 @@ export const api = async (
     requestOptions.body = JSON.stringify(data);
   }
   const response = await fetch(url.href, requestOptions);
+  if (response.status === 204) {
+    return response;
+  }
   return await response.json();
 };

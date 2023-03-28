@@ -11,6 +11,7 @@ export class AuthError extends Error {}
  * Verifies the user's JWT token and returns its payload if it's valid.
  */
 export async function verifyAuth(token: string) {
+  console.log(token);
   if (!token) throw new AuthError("Missing user token");
   try {
     const getJwtSecretKey = process.env.JWT_SECRET;

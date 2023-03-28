@@ -38,10 +38,9 @@ const Login: NextPageWithLayout = () => {
       setIsLoading(true);
       await login(formData);
     } catch (error: unknown) {
-      
       console.error(error);
     }
-    setIsLoading(true);
+    setIsLoading(false);
     setFormData(reset);
   };
 

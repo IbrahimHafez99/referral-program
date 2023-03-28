@@ -54,37 +54,40 @@ const Dashboard = (props: DashboardProps) => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    const response = await LinkAPI.create(cookie.jwt, couponCode);
-    if (response.status === 201) {
-      setLinks((prev) => [...prev, { referral: response.data.referral }]);
-      clearTimeout(timeoutID);
-      setAlert({
-        type: "success",
-        message: response.message,
-        styles: "fixed w-[273px] bottom-2 right-2 transition transition-all",
-      });
-      setIsAlertActive(true);
-      timeoutID = setTimeout(() => {
-        setIsAlertActive(false);
-      }, 4000);
-    } else {
-      clearTimeout(timeoutID);
-      setAlert({
-        type: "error",
-        message: response.message,
-        styles: "fixed w-[273px] bottom-2 right-2 transition transition-all",
-      });
-      setIsAlertActive(true);
-      timeoutID = setTimeout(() => {
-        setIsAlertActive(false);
-      }, 4000);
+    if (couponCode) {
+      const response = await LinkAPI.create(cookie.jwt, couponCode);
+      if (response.status === 201) {
+        setLinks((prev) => [...prev, { referral: response.data.referral }]);
+        clearTimeout(timeoutID);
+        setAlert({
+          type: "success",
+          message: response.message,
+          styles: "fixed w-[273px] bottom-2 right-2 transition transition-all",
+        });
+        setIsAlertActive(true);
+        timeoutID = setTimeout(() => {
+          setIsAlertActive(false);
+        }, 4000);
+      } else {
+        clearTimeout(timeoutID);
+        setAlert({
+          type: "error",
+          message: response.message,
+          styles: "fixed w-[273px] bottom-2 right-2 transition transition-all",
+        });
+        setIsAlertActive(true);
+        timeoutID = setTimeout(() => {
+          setIsAlertActive(false);
+        }, 4000);
+      }
+      const modal = document.getElementById("my-modal-4");
+      console.log(modal);
+      if (modal) {
+        modal.classList.remove("modal-toggle");
+      }
+      console.log(modal);
+      setCouponCode("");
     }
-    const modal = document.getElementById("my-modal-4");
-    if (modal && modal.classList.contains("modal-open")) {
-      modal.classList.remove("modal-open");
-    }
-    console.log(modal);
-    setCouponCode("");
   };
   return (
     <React.Fragment>

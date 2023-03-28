@@ -35,10 +35,17 @@ export default async function handler(
           email,
         },
       });
+
       if (!userWithEmail) {
         return res
           .status(401)
           .json({ errorMessage: "Email or password is invalid" });
+      }
+      if (!userWithEmail?.isConfirmed) {
+        // The request could not be completed because it would result in a conflict with the current state of the resource.
+        return res
+          .status(409)
+          .json({ errorMessage: "your email must be verified" });
       }
       const isMatch = await bcrypt.compare(password, userWithEmail.password);
       if (!isMatch)

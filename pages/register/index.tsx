@@ -57,14 +57,13 @@ const Registration: NextPageWithLayout = () => {
         password: formData.password,
         phoneNumber: value,
       });
-      setAlert({ message: "Registered Successfully", type: "success" });
+      setAlert({ message: response.data.message, type: "success" });
       setIsAlertActive(true);
       setTimeout(() => {
         setIsAlertActive(false);
         router.push("/login");
       }, 2000);
     } catch (error: any) {
-      console.log();
       setAlert({
         message: error.response.data.message as string,
         type: "error",

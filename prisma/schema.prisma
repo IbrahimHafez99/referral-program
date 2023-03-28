@@ -8,13 +8,21 @@ datasource db {
 }
 
 model User {
-  id          Int    @id @default(autoincrement())
-  name        String
-  email       String @unique
-  password    String
-  phoneNumber String @unique
-  links       Link[]
+  id              Int     @id @default(autoincrement())
+  name            String
+  email           String  @unique
+  password        String
+  phoneNumber     String  @unique
+  links           Link[]
+  isConfirmed     Boolean @default(false)
+  isPhoneVerified Boolean @default(false)
 }
+
+// model PhoneStatus {
+//   id     Int   @id @default(autoincrement())
+//   User   User? @relation(fields: [userId], references: [id])
+//   userId Int?
+// }
 
 model Link {
   Id       Int    @id @default(autoincrement())

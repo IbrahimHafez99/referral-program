@@ -1,18 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import nodemailer from "nodemailer";
-import { emailHTML } from "@/public/html/email-page";
+import { transporter } from "@/lib/transporter";
+import { purchaseNotifyHTML } from "@/public/html/email-page";
 
 const prisma = new PrismaClient();
-
-let transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST!,
-  port: parseInt(process.env.EMAIL_PORT!),
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,7 +22,7 @@ export default async function handler(
           from: email?.User?.email,
           to: "ibrahim.hafez99@hotmail.com",
           subject: `QRLIX | A Purchases was made using your referral ${referral}!`,
-          html: emailHTML,
+          html: purchaseNotifyHTML,
         };
         transporter.sendMail(message, (err, info) => {
           if (err) {

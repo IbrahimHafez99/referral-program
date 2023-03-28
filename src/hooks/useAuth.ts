@@ -16,7 +16,7 @@ export const useAuth = () => {
         email: formData.email,
         password: formData.password,
       });
-      setCookie("jwt", response.data.token);
+      setCookie("jwt", response.data.token, { path: "/" });
       setAuthState((prevAuthState) => ({
         ...prevAuthState,
         loading: false,
@@ -29,8 +29,9 @@ export const useAuth = () => {
         router.push("/dashboard");
       }, 1000);
     } catch (error: any) {
+      console.log(error);
       setAlert({
-        message: error.response.data.message as string,
+        message: error.response.data.errorMessage as string,
         type: "error",
       });
       setIsAlertActive(true);
@@ -41,7 +42,7 @@ export const useAuth = () => {
     }
   }
   function logout() {
-    removeCookie("jwt");
+    removeCookie("jwt", { path: "/" });
     router.push("/login");
   }
   return { login, logout };
