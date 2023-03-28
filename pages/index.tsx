@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div
@@ -17,7 +19,9 @@ export default function Home() {
             With our program, you can easily refer your friends, colleagues, or
             anyone who might be interested in using your application
           </p>
-          <button className="btn btn-primary">Get Started</button>
+          <button className="btn">
+            <Link href="/register">Get Started</Link>
+          </button>
         </div>
       </div>
     </div>

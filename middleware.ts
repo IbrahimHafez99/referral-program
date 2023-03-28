@@ -5,7 +5,7 @@ interface UserJwtPayload {
   iat: number;
 }
 export const config = {
-  matcher: ["/api/link/:path*", "/login", "/", "/dashboard", "/register"],
+  matcher: ["/api/link/:path*", "/login", "/dashboard", "/register"],
 };
 // "/api/link/get"
 export async function middleware(req: NextRequest, res: NextResponse) {
