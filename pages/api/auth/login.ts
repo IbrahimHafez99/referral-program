@@ -35,7 +35,11 @@ export default async function handler(
           email,
         },
       });
-
+      const role = await prisma.user_Roles.findFirst({
+        where: {
+          userId: userWithEmail?.id,
+        },
+      });
       if (!userWithEmail) {
         return res
           .status(401)
@@ -53,7 +57,7 @@ export default async function handler(
           .status(401)
           .json({ errorMessage: "Email or password is invalid" });
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const token = await new jose.SignJWT({ email })
+      const token = await new jose.SignJWT({ email, role: role?.roleId })
         .setProtectedHeader({
           alg: "HS256",
         })

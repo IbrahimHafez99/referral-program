@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id              Int     @id @default(autoincrement())
+  id              Int          @id @default(autoincrement())
   name            String
-  email           String  @unique
+  email           String       @unique
   password        String
-  phoneNumber     String  @unique
+  phoneNumber     String       @unique
   links           Link[]
-  isConfirmed     Boolean @default(false)
-  isPhoneVerified Boolean @default(false)
+  isConfirmed     Boolean      @default(false)
+  isPhoneVerified Boolean      @default(false)
+  User_Roles      User_Roles[]
 }
 
 model Link {
@@ -23,4 +24,18 @@ model Link {
   referral String @unique
   User     User?  @relation(fields: [userId], references: [id])
   userId   Int?
+}
+
+model Roles {
+  id         Int          @id @default(autoincrement())
+  role_name  String       @unique
+  User_Roles User_Roles[]
+}
+
+model User_Roles {
+  id     Int    @id @default(autoincrement())
+  User   User?  @relation(fields: [userId], references: [id])
+  userId Int?
+  Roles  Roles? @relation(fields: [roleId], references: [id])
+  roleId Int?
 }

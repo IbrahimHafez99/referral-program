@@ -3,12 +3,18 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useCookies } from "react-cookie";
 
+import jwt, { JwtPayload } from "jsonwebtoken";
 const NavBar = () => {
   const [cookie] = useCookies(["jwt"]);
   const { logout } = useAuth();
   const [token, setToken] = useState<string | undefined>("");
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     setToken(cookie.jwt);
+    const { role } = cookie.jwt ? (jwt.decode(cookie.jwt as string) as any) : 0;
+    if (role === 1) {
+      setIsAdmin(true);
+    }
   }, [cookie.jwt]);
   return (
     <div className="navbar fixed top-0 z-40 bg-primary">
@@ -30,10 +36,17 @@ const NavBar = () => {
                 tabIndex={0}
                 className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
               >
+                {isAdmin && (
+                  <li>
+                    <Link href="/admin/dashboard" className="justify-between">
+                      Admin
+                      <span className="badge">Admin</span>
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link href="/dashboard" className="justify-between">
                     Dashboard
-                    <span className="badge">New</span>
                   </Link>
                 </li>
                 <li>

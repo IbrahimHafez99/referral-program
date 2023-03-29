@@ -12,7 +12,6 @@ export default async function handler(
     const payload: any = getPayload(req);
     const email: string = payload.email;
     const link: string = req.body.link;
-    console.log(link)
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -22,7 +21,6 @@ export default async function handler(
       const linkCount = await prisma.link.count({
         where: { userId: user.id },
       });
-      console.log("link count", linkCount);
       if (linkCount < 5) {
         const newLink = await prisma.link.create({
           data: {

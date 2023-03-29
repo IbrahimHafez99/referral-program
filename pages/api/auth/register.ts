@@ -44,7 +44,6 @@ export default async function handler(
         phoneNumber: client.phoneNumber,
       },
     });
-    console.log(checkUser);
     if (checkUser?.email === email) {
       res.status(409).json({ message: "This email already exists." });
     } else if (checkPhone?.phoneNumber === client.phoneNumber) {
@@ -57,9 +56,19 @@ export default async function handler(
         data: {
           ...client,
           password: hash,
+
           links: {
             create: {
               referral: uuidv4().substring(0, 8),
+            },
+          },
+          User_Roles: {
+            create: {
+              Roles: {
+                connect: {
+                  role_name: "user",
+                },
+              },
             },
           },
         },
@@ -67,27 +76,36 @@ export default async function handler(
           links: true,
         },
       });
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const token = await new jose.SignJWT({ email })
-        .setProtectedHeader({
-          alg: "HS256",
-        })
-        .setExpirationTime("24h")
-        .sign(secret);
-      const message = {
-        from: "qrlix@auth.com",
-        to: "ibrahim.hafez99@hotmail.com",
-        subject: `Your Verfication Link`,
-        html: verficationHTML(token),
-      };
-      transporter.sendMail(message, (err, info) => {
-        if (err) {
-          return res.status(500).json({ data: err });
-        } else {
-          console.log(info);
-          return res.status(201).json({ message: "Email Verification Sent" });
-        }
+      const role = await prisma.user_Roles.findFirst({
+        where: {
+          userId: user.id,
+        },
       });
+      if (role) {
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const token = await new jose.SignJWT({ email, role: role.roleId })
+          .setProtectedHeader({
+            alg: "HS256",
+          })
+          .setExpirationTime("1m")
+          .sign(secret);
+
+        const message = {
+          from: "qrlix@auth.com",
+          to: user.email,
+          subject: `Your Verfication Link`,
+          html: verficationHTML(token),
+        };
+        transporter.sendMail(message, (err, info) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(info);
+          }
+        });
+        return res.status(201).json({ message: "Email Verification Sent" });
+      }
+      return res.status(500).json({ errorMessage: "something went wrong" });
     }
   } catch (error: any) {
     console.log(error);

@@ -21,7 +21,6 @@ export default async function handler(
         const linkCount = await prisma.link.count({
           where: { userId: user.id },
         });
-        console.log(linkCount);
         if (linkCount === 1) {
           return res
             .status(400)

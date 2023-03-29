@@ -17,7 +17,6 @@ export default async function handler(
           where: { referral: referral },
           select: { User: { select: { email: true } } },
         });
-        console.log(email?.User?.email);
         const message = {
           from: email?.User?.email,
           to: "ibrahim.hafez99@hotmail.com",
