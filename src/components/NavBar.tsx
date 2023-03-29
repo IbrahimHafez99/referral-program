@@ -39,7 +39,7 @@ const NavBar = () => {
                 {isAdmin && (
                   <li>
                     <Link href="/admin/dashboard" className="justify-between">
-                      Admin
+                      Dashboard
                       <span className="badge">Admin</span>
                     </Link>
                   </li>
