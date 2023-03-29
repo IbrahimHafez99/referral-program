@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useCookies } from "react-cookie";
 
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 const NavBar = () => {
   const [cookie] = useCookies(["jwt"]);
   const { logout } = useAuth();
@@ -19,7 +19,7 @@ const NavBar = () => {
   return (
     <div className="navbar fixed top-0 z-40 bg-primary">
       <div className="flex-1">
-        <Link href="/" className="btn btn-ghost normal-case text-xl">
+        <Link href="/" className="btn text-white btn-ghost normal-case text-xl">
           QRLIX
         </Link>
       </div>
