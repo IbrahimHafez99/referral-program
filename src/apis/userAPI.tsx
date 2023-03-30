@@ -23,4 +23,15 @@ export const userAPI = {
       console.log(error);
     }
   },
+  suspend: async function (token: string, state: boolean, email: string) {
+    try {
+      const response = await api("/api/admin/user", token, "PATCH", {
+        email,
+        state,
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };

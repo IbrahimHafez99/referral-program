@@ -16,6 +16,7 @@ model User {
   links           Link[]
   isConfirmed     Boolean      @default(false)
   isPhoneVerified Boolean      @default(false)
+  isSuspended     Boolean      @default(false)
   User_Roles      User_Roles[]
 }
 

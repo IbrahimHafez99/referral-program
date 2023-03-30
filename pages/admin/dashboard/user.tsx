@@ -10,6 +10,7 @@ export type AdminUser = {
   name: string;
   phoneNumber: string;
   User_Roles: { roleId: number }[];
+  isSuspended: boolean;
 };
 type Props = {
   users: AdminUser[];
@@ -45,7 +46,7 @@ const AdminUserPage = ({ users, count }: Props) => {
             </thead>
             <tbody>
               {pageUsers.map((user, index) => (
-                <Tr key={index} user={user} />
+                <Tr key={index} user={user} setPageUsers={setPageUsers} />
               ))}
             </tbody>
           </table>
@@ -64,8 +65,7 @@ const AdminUserPage = ({ users, count }: Props) => {
             <button
               className="btn"
               onClick={() => {
-                if(page < maxPage)
-                setPage((prev) => ++prev);
+                if (page < maxPage) setPage((prev) => ++prev);
               }}
             >
               »

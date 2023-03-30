@@ -1,12 +1,26 @@
 import React from "react";
 import type { AdminUser } from "@/pages/admin/dashboard/user";
+import { userAPI } from "@/src/apis/userAPI";
+import { useCookies } from "react-cookie";
 type Props = {
   user: AdminUser;
+  setPageUsers: React.Dispatch<React.SetStateAction<AdminUser[]>>;
 };
 
-const Tr = ({ user }: Props) => {
+const Tr = ({ user, setPageUsers }: Props) => {
+  const [cookie] = useCookies(["jwt"]);
+  const handleSuspend = async () => {
+    await userAPI.suspend(cookie.jwt, user.isSuspended, user.email);
+    setPageUsers((prevPageUsers) =>
+      prevPageUsers.map((item) => {
+        if (item.email === user.email) {
+          return { ...item, isSuspended: !user.isSuspended };
+        } else return item;
+      })
+    );
+  };
   return (
-    <tr>
+    <tr className={`${user.isSuspended && "active"}`}>
       <th>
         <label>
           <input
@@ -37,14 +51,14 @@ const Tr = ({ user }: Props) => {
         {user.email}
         <br />
         {user.User_Roles[0].roleId === 1 && (
-          <span className="badge badge-ghost badge-sm">
-            ADMIN
-          </span>
+          <span className="badge badge-ghost badge-sm">ADMIN</span>
         )}
       </td>
       <td>{user.phoneNumber}</td>
       <th>
-        <button className="btn btn-ghost btn-xs">Suspend</button>
+        <button onClick={handleSuspend} className="btn btn-ghost btn-xs">
+          {!user.isSuspended ? "Suspend" : "Activate"}
+        </button>
       </th>
     </tr>
   );
