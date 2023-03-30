@@ -11,6 +11,7 @@ export const config = {
     "/dashboard",
     "/register",
     "/admin/:path*",
+    "/api/admin/:path*",
   ],
 };
 // "/api/link/get"

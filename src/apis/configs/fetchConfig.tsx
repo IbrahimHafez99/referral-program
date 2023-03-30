@@ -2,12 +2,14 @@ export const api = async (
   endPoint: string,
   token: string,
   method: string,
-  data?: any
+  data?: any,
+  param?: string
 ) => {
   const baseURL = "http://localhost:3000";
-  const endpointPath = endPoint;
+  const endpointPath = param ? endPoint + param : endPoint;
   const url = new URL(endpointPath, baseURL);
-
+  console.log(url.href);
+  console.log(data);
   const requestOptions: RequestInit = {
     method: method,
     headers: {

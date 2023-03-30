@@ -7,26 +7,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { page } = req.query;
-
     try {
-      const users = await prisma.user.findMany({
+      const count = await prisma.user.count({
         where: {
           isConfirmed: true,
         },
-        skip: ((page ? Number(page) : 1) - 1) * 5,
-        take: 5,
-        select: {
-          email: true,
-          name: true,
-          phoneNumber: true,
-          User_Roles: {
-            select: { roleId: true },
-          },
-        },
       });
-      
-      return res.status(200).json({ status: 200, data: users });
+
+      return res.status(200).json({ status: 200, data: count });
     } catch (error: any) {
       return res.status(500).json({ errorMessage: error.message });
     } finally {
