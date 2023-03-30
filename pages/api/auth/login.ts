@@ -51,6 +51,12 @@ export default async function handler(
           .status(409)
           .json({ errorMessage: "your email must be verified" });
       }
+      if (userWithEmail?.isSuspended) {
+        // The request could not be completed because it would result in a conflict with the current state of the resource.
+        return res
+          .status(403)
+          .json({ errorMessage: "your account has been suspended" });
+      }
       const isMatch = await bcrypt.compare(password, userWithEmail.password);
       if (!isMatch)
         return res
