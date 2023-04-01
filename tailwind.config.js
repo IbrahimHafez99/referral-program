@@ -9,8 +9,6 @@ module.exports = {
     "./node_modules/tw-elements/dist/js/**/*.js",
   ],
   theme: {},
-  daisyui: {
-    themes: ["light"],
-  },
+  daisyui: {},
   plugins: [require("daisyui"), require("tw-elements/dist/plugin")],
 };

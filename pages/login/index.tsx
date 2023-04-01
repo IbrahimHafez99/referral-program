@@ -45,7 +45,7 @@ const Login: NextPageWithLayout = () => {
   };
 
   return (
-    <main className="min-h-screen bg-primary flex flex-col justify-center items-center relative ">
+    <main className="min-h-screen flex flex-col justify-center items-center relative ">
       <div className="container">
         {" "}
         <form
