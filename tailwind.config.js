@@ -8,7 +8,13 @@ module.exports = {
     "./src/**/*.{html,js}",
     "./node_modules/tw-elements/dist/js/**/*.js",
   ],
-  theme: {},
+  theme: {
+    extend: {
+      boxShadow: {
+        first: "0px 10px 15px -3px rgba(0,0,0,0.1)",
+      },
+    },
+  },
   daisyui: {},
   plugins: [require("daisyui"), require("tw-elements/dist/plugin")],
 };

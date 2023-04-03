@@ -89,7 +89,7 @@ const Dashboard = (props: DashboardProps) => {
   };
   return (
     <React.Fragment>
-      <main className="mt-[67px]">
+      <main className="mt-[67px] bg-[#ebebeb] landing-page">
         <div className="container ">
           <div className="overflow-x-auto  flex justify-center flex-wrap">
             <table className="table w-full">

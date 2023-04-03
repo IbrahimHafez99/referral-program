@@ -10,6 +10,7 @@ import { useAuthContext } from "@/src/context/AuthContext";
 import Loader from "@/src/components/Loader";
 import NoLayout from "@/src/components/NoLayout";
 import { usePopupsContext } from "@/src/context/PopupsContext";
+import Layout from "@/src/components/Layout";
 type RegistrationFormData = {
   fullName: string;
   email: string;
@@ -23,6 +24,7 @@ const Registration: NextPageWithLayout = () => {
   const { isAlertActive, setIsAlertActive, alert, setAlert } =
     usePopupsContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
   const [value, setValue] = useState<any>();
   const [formData, setFormData] = useState<RegistrationFormData>({
@@ -36,6 +38,7 @@ const Registration: NextPageWithLayout = () => {
       setIsDisabled(false);
     if (!formData.email || !formData.fullName || !formData.password || !value)
       setIsDisabled(true);
+    setError("");
   }, [formData, value]);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -47,7 +50,6 @@ const Registration: NextPageWithLayout = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setAuthState((prevAuthState) => ({ ...prevAuthState, loading: true }));
     setIsDisabled(true);
     try {
       setIsLoading(true);
@@ -57,34 +59,23 @@ const Registration: NextPageWithLayout = () => {
         password: formData.password,
         phoneNumber: value,
       });
+      console.log();
       setAlert({ message: response.data.message, type: "success" });
       setIsAlertActive(true);
-      setTimeout(() => {
-        setIsAlertActive(false);
-        router.push("/login");
-      }, 2000);
     } catch (error: any) {
-      setAlert({
-        message: error.response.data.message as string,
-        type: "error",
-      });
-      setIsAlertActive(true);
-      setTimeout(() => {
-        setIsAlertActive(false);
-      }, 2000);
-      console.error(error);
+      console.log("coming in catch");
+      setError(error.response.data.message);
     }
-    setAuthState((prevAuthState) => ({ ...prevAuthState, loading: false }));
     setValue("");
     setIsLoading(false);
     setFormData(reset);
   };
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center relative">
-      <div className="container">
-        {" "}
+    <main className="landing-page bg-[#ebebeb] flex justify-center items-center relative">
+      <div className="shadow-first bg-white rounded-xl p-6 w-[70%] max-w-[420px] xs:w-[92%]">
+        <h1 className="text-center text-2xl font-bold mb-4">Register</h1>
         <form
-          className="flex flex-col items-center justify-between gap-x-[5%] "
+          className="flex flex-col justify-center items-center gap-x-[5%]"
           onSubmit={handleSubmit}
         >
           <Input
@@ -111,19 +102,8 @@ const Registration: NextPageWithLayout = () => {
             name="password"
             value={formData.password}
           />
-
-          {/* <Input
-            label={"Phone Number"}
-            handleInputChange={handleInputChange}
-            placeholder="Phone number"
-            type="text"
-            name="phone"
-            value={formData.phoneNumber}
-          /> */}
-          <div className="form-control w-[45%] max-w-xs ">
-            <label className="phone-label label-text text-white">
-              Phone number
-            </label>
+          <div className="form-control w-full mx-w-[400px] justify-center items-start mb-2">
+            <label className="phone-label label-text">Phone number</label>
             <PhoneInput
               defaultCountry="OM"
               placeholder="Phone number"
@@ -131,35 +111,36 @@ const Registration: NextPageWithLayout = () => {
               onChange={setValue}
             />
           </div>
+          {error &&
+            Object.values(formData).every((val) => val === "") &&
+            !value && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <button
             type="submit"
-            className={`btn bg-[#3795BD] hover:bg-[#2c7797] mx-auto ${
-              isDisabled && "disabled:bg-[#a2d7f7] border-none"
+            className={`btn bg-[var(--primary-color)] mx-auto ${
+              isDisabled && "btn-disabled"
             }`}
             disabled={isDisabled}
           >
             {isLoading ? <Loader /> : "Register"}
           </button>
-          <Link href="/login" className="mt-4 text-sm text-white">
+          <Link href="/login" className="mt-4 text-sm">
             Already have an account?
           </Link>
         </form>
       </div>
-      {isAlertActive ? (
+      {isAlertActive && (
         <Alert
           type={alert?.type}
           message={alert?.message}
-          styles={`${
-            !isAlertActive && "none"
-          } absolute w-[273px] bottom-2 right-2 animate-pulse transition`}
+          styles={`absolute w-[273px] bottom-2 right-2 animate-pulse transition`}
         />
-      ) : null}
+      )}
     </main>
   );
 };
 
 export default Registration;
 
-Registration.getLayout = function getLayout(page: ReactElement) {
-  return <NoLayout>{page}</NoLayout>;
-};
+// Registration.getLayout = function getLayout(page: ReactElement) {
+//   return <Layout>{page}</Layout>;
+// };

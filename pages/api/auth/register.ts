@@ -32,7 +32,7 @@ export default async function handler(
     if (!isEmail || !isAlpha || !isMobilePhone || !isStrongPassword) {
       return res
         .status(401)
-        .json({ message: "something wrong with the input" });
+        .json({ message: "something is wrong with the input" });
     }
     const checkUser = await prisma.user.findUnique({
       where: {

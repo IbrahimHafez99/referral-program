@@ -17,14 +17,17 @@ const NavBar = () => {
     }
   }, [cookie.jwt]);
   return (
-    <div className="navbar fixed top-0 z-40 bg-primary">
+    <div className="navbar fixed top-0 z-40">
       <div className="flex-1">
-        <Link href="/" className="btn text-white btn-ghost normal-case text-xl">
+        <Link
+          href="/"
+          className="btn text-[var(--primary-color)] btn-ghost normal-case text-xl"
+        >
           QRLIX
         </Link>
       </div>
       <div className="flex-none gap-2">
-        {token ? (
+        {token && (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
@@ -58,10 +61,6 @@ const NavBar = () => {
               </ul>
             </nav>
           </div>
-        ) : (
-          <li className="btn">
-            <Link href="/register">Refer Now</Link>
-          </li>
         )}
       </div>
     </div>

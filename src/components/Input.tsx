@@ -19,16 +19,16 @@ const Input = ({
   handleInputChange,
 }: InputProps) => {
   return (
-    <div className="form-control w-[45%] max-w-xs">
+    <div className="form-control w-full mx-w-[400px] justify-center items-start mb-2">
       <label className="label">
-        <span className="label-text text-white">{label}</span>
+        <span className="label-text">{label}</span>
       </label>
       <input
         name={name}
         type={type}
         value={value}
         placeholder={placeholder}
-        className={`input input-bordered w-full max-w-xs mb-4 ${styles}`}
+        className={`input input-bordered w-full ${styles}`}
         onChange={handleInputChange}
         autoComplete="new-password"
       />

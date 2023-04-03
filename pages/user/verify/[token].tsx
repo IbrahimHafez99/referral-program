@@ -65,8 +65,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const payload = await verifyAuth(token);
 
     if (payload) {
-      await api("/api/auth/confirm", token, "PATCH");
-      return { props: { token, isVerified: true } };
+      const response = await api("/api/auth/confirm", token, "PATCH");
+      return { props: { token: response.data.token, isVerified: true } };
     }
   } catch (error: any) {
     return { props: { isVerified: false, errorMessage: error.message } };
